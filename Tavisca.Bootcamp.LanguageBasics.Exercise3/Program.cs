@@ -42,671 +42,238 @@ namespace Tavisca.Bootcamp.LanguageBasics.Exercise1
 
         public static int[] SelectMeals(int[] protein, int[] carbs, int[] fat, string[] dietPlans)
         {
-        
-            //int  minValue, minIndex;
-            
-            int n = dietPlans.Length;
-            int[] answer = new int[n];
+            int dietPlanLength = dietPlans.Length;
+            int[] answer = new int[dietPlanLength];
 
-            int cLen = protein.Length;     
-            int[] calorie=new int[cLen]; 
+            int calorieLength = protein.Length;     
+            int[] calorie=new int[calorieLength]; 
        
-            for(int i=0;i<cLen;i++)
+            for(int i=0;i<calorieLength;i++)
             {
                 calorie[i]=(protein[i]*5)+(carbs[i]*5)+(fat[i]*9);
             }
         
-            for (int i = 0; i < n; i++)
+            for (int i = 0; i < dietPlanLength; i++)
             {
-                int len = dietPlans[i].Length;
+                int stringLength = dietPlans[i].Length;
                 
-                //For Single Character 'p'
-                if (len == 1)
+                if (stringLength == 0)
                 {
-                    char check = char.Parse(dietPlans[i]);
-                    answer[i] = getIndex(check, protein, carbs, fat, calorie);
+                    answer[i] = 0;
                 }
-
-                if (len == 2)
+                else if (stringLength == 1)
                 {
-                       int ans1;
-                       int[] rep = new int[50];
-                       int rep1; 
-
-                       char[] check = dietPlans[i].ToCharArray();
-                       ans1 = getIndex(check[0], protein, carbs, fat, calorie);
-
-                       rep = CheckRepeated(ans1, check[0], protein,carbs, fat, calorie);
-                     
-                        if(rep[0]==1)
-                       {
-                            answer[i]=ans1;
-                       }
-                       else
-                       {
-                           bool U = Char.IsUpper(check[0]);
-                           if (U == true)
-                           {
-                               check[1] = char.ToUpper(check[1]);
-                               rep1 = CheckRepeatedPos(rep, check[1], protein, carbs, fat, calorie);
-                               if (rep1 == -1)
-                               {
-                                   answer[i] = rep[1];
-                               }
-                               else
-                               {
-                                   answer[i] = rep1;
-                               }
- 
-                           }
-                           else
-                           {
-                               check[1] = char.ToLower(check[1]);
-                               rep1 = CheckRepeatedPos(rep, check[1], protein, carbs, fat, calorie);
-                               if (rep1 == -1)
-                               {
-                                   answer[i] = rep[1];
-                               }
-                               else
-                               {
-                                   answer[i] = rep1;
-                               }
-                           }
-                            
-                       }
-
+                    char stringCharacter = char.Parse(dietPlans[i]);
+                    answer[i] = getIndex(stringCharacter, protein, carbs, fat, calorie);
                 }
-                if (len == 3)
+                else
                 {
-                    int ans1;
-                    int[] rep = new int[50];
-                    int rep1;
+                    int MinMaxIndex, MinMaxIndexPosition;
+                    int[] repatedArrayPosition = new int[50];
 
-                    char[] check = dietPlans[i].ToCharArray();
-                    ans1 = getIndex(check[0], protein, carbs, fat, calorie);
+                    char[] stringCharacter = dietPlans[i].ToCharArray();
+                    MinMaxIndex = getIndex(stringCharacter[0], protein, carbs, fat, calorie);
 
-                    rep = CheckRepeated(ans1, check[0], protein, carbs, fat, calorie);
+                    repatedArrayPosition = getPosition(MinMaxIndex, stringCharacter[0], protein, carbs, fat, calorie);
 
-                    if (rep[0] == 1)
-                    {
-                        answer[i] = ans1;
-                    }
-                    else
-                    {
-                        bool U = Char.IsUpper(check[0]);
-                        if (U == true)
-                        {
-                            check[1] = char.ToUpper(check[1]);
-                            rep1 = CheckRepeatedPos(rep, check[1], protein, carbs, fat, calorie);
-                            if (rep1 == -1)
+                        bool Upper = Char.IsUpper(stringCharacter[0]);
+                        int position = 1;
+                       
+                            while (position < stringCharacter.Length)
                             {
-                                int t;
-                                check[2]=char.ToUpper(check[2]);
-                                t=CheckRepeatedPos(rep, check[2], protein, carbs, fat, calorie);
-                                if (t == -1)
-
+                                if (Upper == true)
                                 {
-                                    answer[i] = rep[1];
+                                    stringCharacter[position] = char.ToUpper(stringCharacter[position]);
                                 }
                                 else
                                 {
-                                    answer[i] = t;
+                                    stringCharacter[position] = char.ToLower(stringCharacter[position]);
                                 }
-                            }
-                            else
-                            {
-                                answer[i] = rep1;
-                            }
-
-                        }
-                        else
-                        {
-                            check[1] = char.ToLower(check[1]);
-                            rep1 = CheckRepeatedPos(rep, check[1], protein, carbs, fat, calorie);
-                            if (rep1 == -1)
-                            {
-                                int t;
-                                check[2] = char.ToLower(check[2]);
-                                t = CheckRepeatedPos(rep, check[2], protein, carbs, fat, calorie);
-                                if (t == -1)
+                    
+                                MinMaxIndexPosition = CheckRepeatedPosition(repatedArrayPosition, stringCharacter[position], protein, carbs, fat, calorie);
+                                if (MinMaxIndexPosition == -1)
                                 {
-                                    answer[i] = rep[1];
+                                    answer[i] = repatedArrayPosition[1];
                                 }
                                 else
                                 {
-                                    answer[i] = t;
+                                    answer[i] = MinMaxIndexPosition;
+                                    break;
                                 }
+                                position++;
                             }
-                            else
-                            {
-                                answer[i] = rep1;
-                            }
-                        }
-
                     }
-
-                }
-                if (len == 4)
-                {
-                    int ans1;
-                    int[] rep = new int[50];
-                    int rep1;
-
-                    char[] check = dietPlans[i].ToCharArray();
-                    ans1 = getIndex(check[0], protein, carbs, fat, calorie);
-
-                    rep = CheckRepeated(ans1, check[0], protein, carbs, fat, calorie);
-
-                    if (rep[0] == 1)
-                    {
-                        answer[i] = ans1;
-                    }
-                    else
-                    {
-                        bool U = Char.IsUpper(check[0]);
-                        if (U == true)
-                        {
-                            check[1] = char.ToUpper(check[1]);
-                            rep1 = CheckRepeatedPos(rep, check[1], protein, carbs, fat, calorie);
-                            if (rep1 == -1)
-                            {
-                                int t;
-                                check[2] = char.ToUpper(check[2]);
-                                t = CheckRepeatedPos(rep, check[2], protein, carbs, fat, calorie);
-                                if (t == -1)
-                                {
-                                    int l;
-                                    check[3] = char.ToUpper(check[3]);
-                                    l = CheckRepeatedPos(rep, check[3], protein, carbs, fat, calorie);
-                                    if (l == -1)
-                                    {
-                                        answer[i] = rep[1];
-                                    }
-                                    else
-                                    {
-                                        answer[i] = l;
-                                    }
-
-                                }
-                                else
-                                {
-                                    answer[i] = t;
-                                }
-                            }
-                            else
-                            {
-                                answer[i] = rep1;
-                            }
-
-                        }
-                        else
-                        {
-                            check[1] = char.ToLower(check[1]);
-                            rep1 = CheckRepeatedPos(rep, check[1], protein, carbs, fat, calorie);
-                            if (rep1 == -1)
-                            {
-                                int t;
-                                check[2] = char.ToLower(check[2]);
-                                t = CheckRepeatedPos(rep, check[2], protein, carbs, fat, calorie);
-                                if (t == -1)
-                                {
-                                    int l;
-                                    check[3] = char.ToLower(check[3]);
-                                    l = CheckRepeatedPos(rep, check[3], protein, carbs, fat, calorie);
-                                    if (l == -1)
-                                    {
-                                        answer[i] = rep[1];
-                                    }
-                                    else
-                                    {
-                                        answer[i] = l;
-                                    }
-
-                                }
-                                else
-                                {
-                                    answer[i] = t;
-                                }
-                            }
-                            else
-                            {
-                                answer[i] = rep1;
-                            }
-                        }
-
-                    }
-
-
-                }
-
             }
 
-            return answer;
-            throw new NotImplementedException();
-        }
+      return answer;
+     throw new NotImplementedException();
+ }
 
-        public static int getIndex(char check, int[] protein, int[] carbs, int[] fat,int[] calorie)
-        {
 
-            int maxValue, minValue;
-            int ans=0;
+ public static int getIndex(char check, int[] protein, int[] carbs, int[] fat,int[] calorie)
+ {
+            int maxValue, minValue, maxIndex, minIndex;
             switch (check)
             {
                 case 'C':
                     maxValue = carbs.Max();
-                    ans = carbs.ToList().IndexOf(maxValue);
-                    break;
+                    return maxIndex = carbs.ToList().IndexOf(maxValue);
 
                 case 'c':
                     minValue = carbs.Min();
-                    ans = carbs.ToList().IndexOf(minValue);
-                    break;
+                    return minIndex = carbs.ToList().IndexOf(minValue);
 
                 case 'P':
                     maxValue = protein.Max();
-                    ans = protein.ToList().IndexOf(maxValue);
-                    break;
+                    return maxIndex = protein.ToList().IndexOf(maxValue);
 
                 case 'p':
                     minValue = protein.Min();
-                    ans = protein.ToList().IndexOf(minValue);
-                    break;
+                    return minIndex = protein.ToList().IndexOf(minValue);
 
                 case 'F':
                     maxValue = fat.Max();
-                    ans = fat.ToList().IndexOf(maxValue);
-                    break;
+                    return maxIndex = fat.ToList().IndexOf(maxValue);
 
                 case 'f':
                     minValue = fat.Min();
-                    ans = fat.ToList().IndexOf(minValue);
-                    break;
+                    return minIndex = fat.ToList().IndexOf(minValue);
 
                 case 'T':
                     maxValue = calorie.Max();
-                    ans = calorie.ToList().IndexOf(maxValue);
-                    break;
+                    return maxIndex = calorie.ToList().IndexOf(maxValue);
 
                 case 't':
                     minValue = calorie.Min();
-                    ans = calorie.ToList().IndexOf(minValue);
-                    break;
+                    return minIndex = calorie.ToList().IndexOf(minValue);
             }
-            return ans;  
+            return 0;
         }
 
 
-        public static int[] CheckRepeated(int index,char check, int[] protein, int[] carbs, int[] fat, int[] calorie)
+        public static int[] getPosition(int index,char check, int[] protein, int[] carbs, int[] fat, int[] calorie)
         {
-            int count=0,temp;
-            int[] rep = new int[50];
-            int z = 1;
-
-            switch (check)
-            {
-                case 'C':    
-                        temp=carbs[index];
-                        for (int i = 0; i < carbs.Length; i++)
-                        {
-                            if (temp == carbs[i])
-                            {
-                                rep[z] = i;
-                                z++;
-                                count++;
-                            }
-                        }
-                        rep[0] = count;
-               break;
-
-                case 'c':
-                       temp=carbs[index];
-                        for (int i = 0; i < carbs.Length; i++)
-                        {
-                            if (temp == carbs[i])
-                            {
-                                rep[z] = i;
-                                count++;
-                                z++;
-                            }
-                        }
-                        rep[0] = count;
-
-               break;
-
-                case 'P':
-                        temp=protein[index];
-                        for (int i = 0; i < protein.Length; i++)
-                        {
-                            if (temp == protein[i])
-                            {
-                                rep[z] = i;
-                                z++;
-                                count++;
-                            }
-                        }
-                        rep[0] = count;
-
-                break;
-
-                case 'p':
-                        temp=protein[index];
-                        for (int i = 0; i < protein.Length; i++)
-                        {
-                            if (temp == protein[i])
-                            {
-                                rep[z] = i;
-                                z++;
-                                count++;
-                            }
-                        }
-                        rep[0] = count;
-
-                break;
-
-                case 'F':
-                        temp=fat[index];
-                        for (int i = 0; i < fat.Length; i++)
-                        {
-                            if (temp == fat[i])
-                            {
-                                rep[z] = i;
-                                count++;
-                                z++;
-                            }
-                        }
-                        rep[0] = count;
-                
-                break;
-
-                case 'f':
-                        temp=fat[index];
-                        for (int i = 0; i < fat.Length; i++)
-                        {
-                            if (temp == fat[i])
-                            {
-                                rep[z] = i;
-                                z++;
-                                count++;
-                            }
-                        }
-                        rep[0] = count;
-                
-
-                break;
-
-                case 'T':
-                        temp=calorie[index];
-                        for (int i = 0; i < calorie.Length; i++)
-                        {
-                            if (temp == calorie[i])
-                            {
-                                rep[z] = i;
-                                z++;
-                                count++;
-                            }
-                        }
-                        rep[0] = count;
-                break;
-
-                case 't':
-                        temp=calorie[index];
-                        for (int i = 0; i < calorie.Length; i++)
-                        {
-                            if (temp == calorie[i])
-                            {
-                                rep[z] = i;
-                                z++;
-                                count++;
-                            }
-                        }
-                        rep[0] = count;
-                 
-                break;
-            }
-            return rep;
-        }
-
-
-
-        public static int CheckRepeatedPos(int[] index, char check, int[] protein, int[] carbs, int[] fat, int[] calorie)
-        {
-            int count = 0, temp;
-            
+            int[] repeatElementPosition = new int[50];
+        
             switch (check)
             {
                 case 'C':
-                    temp = carbs[index[1]];
-                    
-                    for (int i = 0; i < index[0]; i++)
-                    {
-                        if (temp == carbs[index[i+1]])
-                        {
-                            count++;
-                        }
-                    }
-
-                    if (count == index[0])
-                    {
-                        return -1;
-                    }
-                    else
-                    {
-                        for (int i = 0; i < index[0]; i++)
-                        {
-                            if (temp< carbs[index[i + 1]])
-                            {
-                                temp = carbs[index[i + 1]];  
-                            }
-                        }
-                        temp = carbs.ToList().IndexOf(temp);
-                        return temp;
-                    }
-                   
+                        return repeatElementPosition= getArray(index,carbs);
                 case 'c':
-                             temp = carbs[index[1]];
-                    
-                            for (int i = 0; i < index[0]; i++)
-                            {
-                                if (temp == carbs[index[i+1]])
-                                {
-                                    count++;
-                                }
-                            }
-                      
-                            if (count == index[0])
-                            {
-                                return -1;
-                            }
-                            else
-                            {
-                                Console.WriteLine("ind " + index[0]);
-                                for (int i = 0; i < index[0]; i++)
-                                {
-                                    
-                                    if (temp> carbs[index[i + 1]])
-                                    {
-                                        temp = carbs[index[i + 1]]; 
- 
-                                    }
-                                }
-                                temp = carbs.ToList().IndexOf(temp);
-                                return temp;
-                            }
-
+                        return repeatElementPosition = getArray(index, carbs);
                 case 'P':
-                   
-                     temp = protein[index[1]];
-                    
-                    for (int i = 0; i < index[0]; i++)
-                    {
-                        if (temp == protein[index[i+1]])
-                        {
-                            count++;
-                        }
-                    }
-
-                    if (count == index[0])
-                    {
-                        return -1;
-                    }
-                    else
-                    {
-                        for (int i = 0; i < index[0]; i++)
-                        {
-                            if (temp< protein[index[i + 1]])
-                            {
-                                temp = protein[index[i + 1]];  
-                            }
-                        }
-                        temp = protein.ToList().IndexOf(temp);
-                        return temp;
-                    }
-
+                        return repeatElementPosition = getArray(index, protein);
                 case 'p':
-                     temp = protein[index[1]];
-                    
-                    for (int i = 0; i < index[0]; i++)
-                    {
-                        if (temp == protein[index[i+1]])
-                        {
-                            count++;
-                        }
-                    }
-
-                    if (count == index[0])
-                    {
-                        return -1;
-                    }
-                    else
-                    {
-                        for (int i = 0; i < index[0]; i++)
-                        {
-                            if (temp> protein[index[i + 1]])
-                            {
-                                temp = protein[index[i + 1]];  
-                            }
-                        }
-                        temp = protein.ToList().IndexOf(temp);
-                        return temp;
-                    }
-
+                        return repeatElementPosition = getArray(index, protein);
                 case 'F':
-                   temp = fat[index[1]];
-                    
-                    for (int i = 0; i < index[0]; i++)
-                    {
-                        if (temp == fat[index[i+1]])
-                        {
-                            count++;
-                        }
-                    }
-
-                    if (count == index[0])
-                    {
-                        return -1;
-                    }
-                    else
-                    {
-                        for (int i = 0; i < index[0]; i++)
-                        {
-                            if (temp< fat[index[i + 1]])
-                            {
-                                temp = fat[index[i + 1]];  
-                            }
-                        }
-                        temp = fat.ToList().IndexOf(temp);
-                        return temp;
-                    }
-
+                        return repeatElementPosition = getArray(index, fat);
                 case 'f':
-                   temp = fat[index[1]];
-                    for (int i = 0; i < index[0]; i++)
-                    {
-                        if (temp == fat[index[i+1]])
-                        {
-                            count++;
-                        }
-                    }
-
-                    if (count == index[0])
-                    {
-                        return -1;
-                    }
-                    else
-                    {
-                        for (int i = 0; i < index[0]; i++)
-                        {
-                            if (temp> fat[index[i + 1]])
-                            {
-                                temp = fat[index[i + 1]];  
-                            }
-                        }
-                        temp = fat.ToList().IndexOf(temp);
-                        return temp;
-                    }
-
-           
+                        return repeatElementPosition = getArray(index, fat);
                 case 'T':
-                          temp = calorie[index[1]];
-                    
-                    for (int i = 0; i < index[0]; i++)
-                    {
-                        if (temp == calorie[index[i+1]])
-                        {
-                            count++;
-                        }
-                    }
-
-                    if (count == index[0])
-                    {
-                        return -1;
-                    }
-                    else
-                    {
-                        for (int i = 0; i < index[0]; i++)
-                        {
-                            if (temp< calorie[index[i + 1]])
-                            {
-                                temp = calorie[index[i + 1]];  
-                            }
-                        }
-                        temp = calorie.ToList().IndexOf(temp);
-                        return temp;
-                    }
-
-            
-
+                        return repeatElementPosition = getArray(index, calorie);
                 case 't':
-                         temp = calorie[index[1]];
-                    
-                    for (int i = 0; i < index[0]; i++)
-                    {
-                        if (temp == calorie[index[i+1]])
-                        {
-                            count++;
-                        }
-                    }
-
-                    if (count == index[0])
-                    {
-                        return -1;
-                    }
-                    else
-                    {
-                        for (int i = 0; i < index[0]; i++)
-                        {
-                            if (temp> calorie[index[i + 1]])
-                            {
-                                temp = calorie[index[i + 1]];  
-                            }
-                        }
-                        temp = calorie.ToList().IndexOf(temp);
-                        return temp;
-                    }
-                   
+                        return repeatElementPosition = getArray(index, calorie);
             }
+            return repeatElementPosition;
+        }
+
+        public static int[] getArray(int index, int[] type)
+       {
+           int count = 0, temp;
+           int[] repeatElementPosition = new int[50];
+           int z = 1;
+
+            temp = type[index];
+            for (int i = 0; i < type.Length; i++)
+            {
+                if (temp == type[i])
+                {
+                    repeatElementPosition[z] = i;
+                    z++;
+                    count++;
+                }
+            }
+            repeatElementPosition[0] = count;
+            return repeatElementPosition;
+        }
+
+
+        public static int CheckRepeatedPosition(int[] index, char check, int[] protein, int[] carbs, int[] fat, int[] calorie)
+        {
+            int min = 0, max = 1;
+            int position;
+            switch (check)
+            {
+                case 'C':
+                         position=getElement(index,carbs,max);
+                         return position;
+                case 'c':
+                        position=getElement(index,carbs,min);
+                         return position;
+                case 'P':
+                         position = getElement(index, protein, max);
+                         return position;
+                case 'p':
+                         position = getElement(index, protein, min);
+                         return position;
+                case 'F':
+                         position = getElement(index, fat, max);
+                         return position;
+                case 'f':
+                         position = getElement(index, fat, min);
+                         return position;
+                case 'T':
+                         position = getElement(index, calorie, max);
+                         return position;
+                case 't':
+                         position = getElement(index, calorie, min);
+                         return position;
+            }    
             return -1;
         }
+
+        public static int getElement(int[] index, int[] type, int MinMax)
+        {
+            int count = 0, position;
+       
+            position = type[index[1]];
+
+            for (int i = 0; i < index[0]; i++)
+            {
+                if (position == type[index[i + 1]])
+                {
+                    count++;
+                }
+            }
+
+            if (count == index[0])
+            {
+                return -1;
+            }
+            else
+            {
+                for (int i = 0; i < index[0]; i++)
+                {
+                    if (MinMax == 1)
+                    {
+                        if (position < type[index[i + 1]])
+                        {
+                            position = type[index[i + 1]];
+                        }
+                    }
+                    else
+                    {
+                        if (position > type[index[i + 1]])
+                        {
+                            position = type[index[i + 1]];
+                        }
+                    }
+                }
+                position = type.ToList().IndexOf(position);
+                return position;
+            }
+                  
+        }      
 
     }
 }
